@@ -1,3 +1,4 @@
+"use client";
 import { IconButton } from "@material-tailwind/react";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/solid";
 import React, { useState, useEffect } from "react";
