@@ -1,13 +1,35 @@
 "use client";
-// import logo from './images/logo.jpg';
-export default function Login() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 via-white-800 to-primary p-4 sm:p-6">
-      <div className="bg-white shadow-lg rounded-xl overflow-hidden w-full max-w-md sm:max-w-3xl flex flex-col sm:flex-row animate-fade-in">
+import { useState } from "react";
+import { useRouter } from "next/navigation"; // Import para redirecionar para outra página
 
-        {/* Coluna esquerda com logo e informações (visível apenas em telas médias ou maiores) */}
+export default function Login() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    
+    // Usuário e senha fixos para autenticação básica
+    const validUsername = "admin";
+    const validPassword = "password";
+
+    if (username === validUsername && password === validPassword) {
+      setError("");
+      router.push("/home"); // Redireciona para a página 'home'
+    } else {
+      setError("Usuário ou senha incorretos.");
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-200 via-white-800 to-primary p-4 sm:p-6">
+      <div className="bg-white shadow-lg rounded-xl overflow-hidden w-full max-w-md sm:max-w-3xl flex flex-col sm:flex-row animate-fade-in">
+        
+        {/* Coluna esquerda com logo e informações */}
         <div className="hidden sm:flex sm:w-1/2 bg-blue-100 flex-col items-center justify-center p-4 sm:p-8 space-y-4">
-        <p className="text-center text-gray-600 text-sm sm:text-base">
+          <p className="text-center text-gray-600 text-sm sm:text-base">
             Bem-vindo(a) ao Sistema Supervisor! Faça login para continuar.
           </p>
           <img
@@ -15,15 +37,17 @@ export default function Login() {
             alt="Logo"
             className="w-25 h-25 sm:w-43 sm:h-43 transition-transform transform hover:scale-110 duration-300 ease-in-out"
           />
-      
         </div>
 
         {/* Coluna direita com o formulário */}
         <div className="w-full sm:w-1/2 p-6 sm:p-8">
           <h2 className="text-xl sm:text-2xl font-bold text-center text-gray-800 mb-6 sm:mb-8">Login</h2>
 
-          {/* Formulário de Login simplificado */}
-          <form className="space-y-4 sm:space-y-6">
+          {/* Exibe mensagem de erro, se houver */}
+          {error && <p className="text-center text-red-500 mb-4">{error}</p>}
+
+          {/* Formulário de Login */}
+          <form onSubmit={handleLogin} className="space-y-4 sm:space-y-6">
             <div className="relative">
               <label className="block text-sm font-medium text-gray-700">Usuário</label>
               <div className="flex items-center border border-gray-300 rounded-md focus-within:border-blue-500">
@@ -46,6 +70,8 @@ export default function Login() {
                   name="username"
                   className="w-full px-3 py-2 border-none focus:outline-none"
                   placeholder="Digite seu usuário"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
             </div>
@@ -70,13 +96,15 @@ export default function Login() {
                 <input
                   type="password"
                   name="password"
-                  placeholder="Digite sua senha"
                   className="w-full px-3 py-2 border-none focus:outline-none"
+                  placeholder="Digite sua senha"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
             </div>
 
-            {/* Botão de Login com animação de hover */}
+            {/* Botão de Login */}
             <button
               type="submit"
               className="w-full bg-blue-600 text-white font-semibold py-2 sm:py-3 rounded hover:bg-blue-700 transition-transform transform hover:scale-105 duration-200"

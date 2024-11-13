@@ -3,7 +3,6 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/solid";
 import ThemeBtn from "../../components/theme_btn/page";
-
 import {
   IconButton,
   Card,
@@ -40,8 +39,12 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 
+
 export default function Sidebar() {
   const [theme, setTheme] = useState("light");
+  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+  const [open, setOpen] = useState(0);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";
@@ -56,11 +59,12 @@ export default function Sidebar() {
     localStorage.setItem("theme", newTheme);
   };
 
-  const [open, setOpen] = useState(0);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
   const handleOpen = (value) => {
     setOpen(open === value ? 0 : value);
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarVisible((prev) => !prev);
   };
 
   const openDrawer = () => setIsDrawerOpen(true);
@@ -70,28 +74,36 @@ export default function Sidebar() {
     <>
       <ThemeBtn toggleTheme={toggleTheme} theme={theme} />
 
-      <div className="md:hidden">
-        <IconButton variant="text" size="lg" onClick={openDrawer}>
-          {isDrawerOpen ? (
-            <XMarkIcon className="h-8 w-8 stroke-2" />
-          ) : (
-            <Bars3Icon className="h-8 w-8 stroke-2" />
-          )}
+      {/* Botão de alternância de sidebar no desktop */}
+      <div className="fixed top-4 left-4 z-50 md:hidden">
+      <IconButton variant="text" size="lg" onClick={isDrawerOpen ? closeDrawer : openDrawer}>
+          {isDrawerOpen ? <XMarkIcon className="h-8 w-8 text-black dark:text-white" /> : <Bars3Icon className="h-8 w-8 text-black dark:text-white" />}
         </IconButton>
       </div>
 
+      {/* Botão de alternância de sidebar no desktop */}
+      <div className={`fixed top-4 ${isSidebarVisible ? "left-[18rem]" : "left-4"} z-50 hidden md:block`}>
+      <IconButton variant="text" size="lg" onClick={toggleSidebar}>
+          {isSidebarVisible ? <Bars3Icon className="h-8 w-8 text-black dark:text-white" /> : <Bars3Icon className="h-8 w-8 text-black dark:text-white" />}
+        </IconButton>
+      </div>
 
+      {/* Sidebar para dispositivos móveis */}
       <Drawer open={isDrawerOpen} onClose={closeDrawer} className="md:hidden">
         <div className={`h-full w-[17rem] p-4 shadow-xl ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}>
           <SidebarContent handleOpen={handleOpen} open={open} toggleTheme={toggleTheme} theme={theme} />
         </div>
       </Drawer>
 
-      <div className={`hidden md:block w-[17rem] h-screen fixed top-0 left-0 shadow-xl p-4 ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}>
-        <SidebarContent handleOpen={handleOpen} open={open} toggleTheme={toggleTheme} theme={theme} />
-      </div>
+      {/* Sidebar para desktops, com visibilidade controlada */}
+      {isSidebarVisible && (
+        <div className={`hidden md:block w-[17rem] h-screen fixed top-0 left-0 shadow-xl p-4 ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}>
+          <SidebarContent handleOpen={handleOpen} open={open} toggleTheme={toggleTheme} theme={theme} />
+        </div>
+      )}
 
-      <div className={`pt-4 pl-0 md:pl-[17rem] transition-all duration-300`}>
+      {/* Ajuste do conteúdo da página */}
+      <div className={`transition-all duration-300 ${isSidebarVisible ? "md:pl-[17rem]" : "md:pl-0"} pt-4`}>
         {/* Conteúdo da página */}
       </div>
     </>
@@ -150,7 +162,7 @@ function SidebarContent({ handleOpen, open, toggleTheme, theme }) {
                   Produtos
                 </ListItem>
               </Link>
-              <Link href="/cadastros/entidades" passHref>
+              {/* <Link href="/cadastros/entidades" passHref>
                 <ListItem className={`${theme === "dark" ? "text-white hover:bg-gray-700" : "text-gray-800 hover:bg-gray-200"}`}>
                   <ListItemPrefix>
                     <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
@@ -173,7 +185,7 @@ function SidebarContent({ handleOpen, open, toggleTheme, theme }) {
                   </ListItemPrefix>
                   Usuários
                 </ListItem>
-              </Link>
+              </Link> */}
             </List>
           </AccordionBody>
         </Accordion>
@@ -188,7 +200,7 @@ function SidebarContent({ handleOpen, open, toggleTheme, theme }) {
             />
           }
         >
-          <Link href="/processos" passHref>
+          {/* <Link href="/processos" passHref>
             <ListItem className={`${theme === "dark" ? "text-white hover:bg-gray-700" : "text-gray-800 hover:bg-gray-200"}`}>
               <ListItemPrefix>
                 <ExclamationCircleIcon className="h-5 w-5" />
@@ -203,7 +215,7 @@ function SidebarContent({ handleOpen, open, toggleTheme, theme }) {
               </ListItemPrefix>
               Relatórios
             </ListItem>
-          </Link>
+          </Link> */}
           <ListItem className={`p-0 ${theme === "dark" ? "text-white" : "text-gray-800"}`} selected={open === 2}>
             <AccordionHeader onClick={() => handleOpen(2)} className={`border-b-0 p-3 ${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-200"}`}>
               <ListItemPrefix>
@@ -224,7 +236,7 @@ function SidebarContent({ handleOpen, open, toggleTheme, theme }) {
                   Configuração Geral
                 </ListItem>
               </Link>
-              <ListItem className={`${theme === "dark" ? "text-white hover:bg-gray-700" : "text-gray-800 hover:bg-gray-200"}`}>
+              {/* <ListItem className={`${theme === "dark" ? "text-white hover:bg-gray-700" : "text-gray-800 hover:bg-gray-200"}`}>
                 <ListItemPrefix>
                   <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
                 </ListItemPrefix>
@@ -235,7 +247,7 @@ function SidebarContent({ handleOpen, open, toggleTheme, theme }) {
                   <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
                 </ListItemPrefix>
                 Processa Excepcionais
-              </ListItem>
+              </ListItem> */}
             </List>
           </AccordionBody>
         </Accordion>
