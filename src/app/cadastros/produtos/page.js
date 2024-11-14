@@ -1,6 +1,6 @@
 "use client";
 import Sidebar from "../../components/sidebar/page";
-import Modal from "../../components/modal/cadastro_produtos/page"; 
+import Modal from "../../components/modal/cadastro_produtos/page";
 import CadastroProdutoModal from '../../components/modal/cadastro_produtos/page';
 import { Button } from '@mui/material';
 
@@ -71,6 +71,118 @@ const TABLE_ROWS = [
     prNormal: "$10,00",
     codTiaa: "TIA123",
   },
+  {
+    codigo: "002",
+    emp: "Emp1",
+    descricao: "Produto A",
+    descricaoReduzida: "Prod A",
+    diretiva: "D1",
+    bal: "Sim",
+    codigoBarras: "1234567890123",
+    codigoNCM: "10010010",
+    vasilh: "Sim",
+    cst: "010",
+    cstPis: "050",
+    pis: "1.65%",
+    cstCofins: "060",
+    cofins: "7.60%",
+    cest: "1234567",
+    cts: "CTS1",
+    ativo: "Sim",
+    prVenda: "$10,00",
+    prVenda1: "$9,50",
+    prVenda2: "$9,00",
+    prVenda3: "$8,50",
+    prVenda4: "$8,00",
+    prVenda5: "$7,50",
+    oferta: "Não",
+    prNormal: "$10,00",
+    codTiaa: "TIA123",
+  },
+  {
+    codigo: "003",
+    emp: "Emp1",
+    descricao: "Produto A",
+    descricaoReduzida: "Prod A",
+    diretiva: "D1",
+    bal: "Sim",
+    codigoBarras: "1234567890123",
+    codigoNCM: "10010010",
+    vasilh: "Sim",
+    cst: "010",
+    cstPis: "050",
+    pis: "1.65%",
+    cstCofins: "060",
+    cofins: "7.60%",
+    cest: "1234567",
+    cts: "CTS1",
+    ativo: "Sim",
+    prVenda: "$10,00",
+    prVenda1: "$9,50",
+    prVenda2: "$9,00",
+    prVenda3: "$8,50",
+    prVenda4: "$8,00",
+    prVenda5: "$7,50",
+    oferta: "Não",
+    prNormal: "$10,00",
+    codTiaa: "TIA123",
+  },
+  {
+    codigo: "004",
+    emp: "Emp1",
+    descricao: "Produto A",
+    descricaoReduzida: "Prod A",
+    diretiva: "D1",
+    bal: "Sim",
+    codigoBarras: "1234567890123",
+    codigoNCM: "10010010",
+    vasilh: "Sim",
+    cst: "010",
+    cstPis: "050",
+    pis: "1.65%",
+    cstCofins: "060",
+    cofins: "7.60%",
+    cest: "1234567",
+    cts: "CTS1",
+    ativo: "Sim",
+    prVenda: "$10,00",
+    prVenda1: "$9,50",
+    prVenda2: "$9,00",
+    prVenda3: "$8,50",
+    prVenda4: "$8,00",
+    prVenda5: "$7,50",
+    oferta: "Não",
+    prNormal: "$10,00",
+    codTiaa: "TIA123",
+  },
+  {
+    codigo: "005",
+    emp: "Emp1",
+    descricao: "Produto A",
+    descricaoReduzida: "Prod A",
+    diretiva: "D1",
+    bal: "Sim",
+    codigoBarras: "1234567890123",
+    codigoNCM: "10010010",
+    vasilh: "Sim",
+    cst: "010",
+    cstPis: "050",
+    pis: "1.65%",
+    cstCofins: "060",
+    cofins: "7.60%",
+    cest: "1234567",
+    cts: "CTS1",
+    ativo: "Sim",
+    prVenda: "$10,00",
+    prVenda1: "$9,50",
+    prVenda2: "$9,00",
+    prVenda3: "$8,50",
+    prVenda4: "$8,00",
+    prVenda5: "$7,50",
+    oferta: "Não",
+    prNormal: "$10,00",
+    codTiaa: "TIA123",
+  },
   // Adicione outros registros conforme necessário
 ];
 
@@ -79,7 +191,7 @@ export default function ProdutosPage() {
 
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
-  
+
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar />
@@ -137,14 +249,17 @@ export default function ProdutosPage() {
               </div>
             </div>
 
-            <Card className="h-full w-full overflow-scroll">
+            <Card className="h-full w-full overflow-auto">
               <table className="w-full min-w-max table-auto text-left">
                 <thead>
                   <tr>
+                    <th className="border-b border-gray-300 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 p-3 text-center">
+                      <input type="checkbox" />
+                    </th>
                     {TABLE_HEAD.map(({ head, icon }) => (
                       <th key={head} className="border-b border-gray-300 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 p-3">
                         <div className="flex items-center gap-1">
-                          {icon}
+                          {/* {icon} */}
                           <Typography color="blue-gray" variant="small" className="!font-bold">
                             {head}
                           </Typography>
@@ -160,8 +275,12 @@ export default function ProdutosPage() {
 
                     return (
                       <tr key={row.codigo}>
+                        {/* Checkbox para selecionar a linha */}
+                        <td className={`${classes} text-center`}>
+                          <input type="checkbox" />
+                        </td>
                         {Object.values(row).map((value, i) => (
-                          <td key={i} className={classes}>{value}</td>
+                          <td key={i} className={`${classes} truncate`}>{value}</td>
                         ))}
                       </tr>
                     );
@@ -169,6 +288,7 @@ export default function ProdutosPage() {
                 </tbody>
               </table>
             </Card>
+
           </div>
         </div>
       </div>
