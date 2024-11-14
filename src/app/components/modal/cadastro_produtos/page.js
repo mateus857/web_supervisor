@@ -1,3 +1,4 @@
+"use client";
 // src/app/components/modal/cadastro_produtos/page.js
 import { useState } from "react";
 import { Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
@@ -114,4 +115,3 @@ export default function CadastroProdutoModal({ open, onClose }) {
     </Dialog>
   );
 }
-    
