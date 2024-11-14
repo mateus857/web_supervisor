@@ -1,24 +1,20 @@
 "use client";
-
 import Sidebar from "../../components/sidebar/page";
-import { DocumentIcon } from "@heroicons/react/24/solid";
-import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import Modal from "../../components/modal/cadastro_produtos/page"; 
+import CadastroProdutoModal from '../../components/modal/cadastro_produtos/page';
+import { Button } from '@mui/material';
+
+import { useState } from "react";
+import { DocumentIcon, ArrowDownTrayIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import {
   Card,
   Input,
   Checkbox,
-  CardHeader,
-  IconButton,
   Typography,
 } from "@material-tailwind/react";
 
 const TABLE_HEAD = [
-  {
-    head: "Código",
-    icon: <Checkbox />,
-
-  },
+  { head: "Código", icon: <Checkbox /> },
   { head: "Emp" },
   { head: "Descrição" },
   { head: "Descrição Reduzida" },
@@ -75,73 +71,19 @@ const TABLE_ROWS = [
     prNormal: "$10,00",
     codTiaa: "TIA123",
   },
-  {
-    codigo: "002",
-    emp: "Emp2",
-    descricao: "Produto B",
-    descricaoReduzida: "Prod B",
-    diretiva: "D2",
-    bal: "Não",
-    codigoBarras: "9876543210987",
-    codigoNCM: "20020020",
-    vasilh: "Não",
-    cst: "020",
-    cstPis: "040",
-    pis: "2.00%",
-    cstCofins: "050",
-    cofins: "8.00%",
-    cest: "7654321",
-    cts: "CTS2",
-    ativo: "Não",
-    prVenda: "$20,00",
-    prVenda1: "$19,50",
-    prVenda2: "$19,00",
-    prVenda3: "$18,50",
-    prVenda4: "$18,00",
-    prVenda5: "$17,50",
-    oferta: "Sim",
-    prNormal: "$20,00",
-    codTiaa: "TIA456",
-  },
-  {
-    codigo: "003",
-    emp: "Emp3",
-    descricao: "Produto C",
-    descricaoReduzida: "Prod B",
-    diretiva: "D2",
-    bal: "Não",
-    codigoBarras: "9876543210987",
-    codigoNCM: "20020020",
-    vasilh: "Não",
-    cst: "020",
-    cstPis: "040",
-    pis: "2.00%",
-    cstCofins: "050",
-    cofins: "8.00%",
-    cest: "7654321",
-    cts: "CTS2",
-    ativo: "Não",
-    prVenda: "$20,00",
-    prVenda1: "$19,50",
-    prVenda2: "$19,00",
-    prVenda3: "$18,50",
-    prVenda4: "$18,00",
-    prVenda5: "$17,50",
-    oferta: "Sim",
-    prNormal: "$20,00",
-    codTiaa: "TIA456",
-  },
-
+  // Adicione outros registros conforme necessário
 ];
 
-
 export default function ProdutosPage() {
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleOpenModal = () => setModalOpen(true);
+  const handleCloseModal = () => setModalOpen(false);
+  
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar />
-      {/* <div className="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5"> */}
-
-      <div className="flex-1 overflow-hidden py-6 px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl">
+      <div className="flex-1 overflow-hidden py-6 px-4 sm:px-6 lg:px-8 mx-auto w-full">
         <header className="px-4 mx-auto max-w-screen-2xl lg:px-12 mb-8">
           <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
             <main className="p-4">
@@ -155,9 +97,7 @@ export default function ProdutosPage() {
 
         <div className="px-4 mx-auto max-w-screen-2xl lg:px-12">
           <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
-            {/* <CardHeader floated={false} shadow={false} className="mb-4 rounded-none p-0 sticky top-0 z-10 bg-white dark:bg-gray-800"> */}
             <div className="flex flex-col md:flex-row justify-between items-center gap-2 p-2">
-              {/* Input de Search - Ocupando o máximo de espaço disponível */}
               <div className="w-full md:w-1/4">
                 <Input
                   label="Search"
@@ -166,21 +106,13 @@ export default function ProdutosPage() {
                 />
               </div>
 
-              {/* Botões de Ação - Mantendo tamanho adequado */}
-              <div className="flex flex-row space-x-2 w-auto mt-2 md:mt-0">
+              <div className="flex space-x-2 w-auto mt-2 md:mt-0">
+                <Button className="bg-primary-600 border border-gray-300 hover:bg-primary-700 text-gray text-sm rounded-lg focus:ring-2 focus:ring-primary-500 w-auto h-auto px-2 py-2 flex items-center justify-center" variant="contained" onClick={handleOpenModal}>Novo</Button>
+                <CadastroProdutoModal open={modalOpen} onClose={handleCloseModal} />
                 <button
-                  type="button"
-                  className="bg-primary-600 border border-gray-300 hover:bg-primary-700 text-gray text-sm rounded-lg focus:ring-2 focus:ring-primary-500 w-auto h-auto px-2 py-2 flex items-center justify-center"
-                >
-                  <DocumentIcon className="w-5 h-5" />
-                  {/* Esconder o texto em mobile */}
-                  <span className="hidden md:inline ml-2">Novo</span>
-                </button>
-                <button
-                  className="bg-primary-600 border border-gray-300 hover:bg-primary-700 text-gray text-sm rounded-lg focus:ring-2 focus:ring-primary-500 w-auto h-auto px-2 py-2 flex items-center justify-center"
+                  className="bg-primary-600 border border-gray-300 hover:bg-primary-700 text-gray text-sm rounded-lg focus:ring-2 focus:ring-primary-500 px-2 py-2 flex items-center justify-center"
                 >
                   <ArrowDownTrayIcon className="w-5 h-5" />
-                  {/* Esconder o texto em mobile */}
                   <span className="hidden md:inline ml-2">Ordenar</span>
                 </button>
                 <button
@@ -204,22 +136,16 @@ export default function ProdutosPage() {
                 </button>
               </div>
             </div>
-            {/* </CardHeader> */}
-            <Card className="h-full w-full overflow-scroll">
 
+            <Card className="h-full w-full overflow-scroll">
               <table className="w-full min-w-max table-auto text-left">
                 <thead>
                   <tr>
                     {TABLE_HEAD.map(({ head, icon }) => (
-                      <th key={head} className="border-b border-gray-300 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 p-3 ">
-
+                      <th key={head} className="border-b border-gray-300 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 p-3">
                         <div className="flex items-center gap-1">
                           {icon}
-                          <Typography
-                            color="blue-gray"
-                            variant="small"
-                            className="!font-bold"
-                          >
+                          <Typography color="blue-gray" variant="small" className="!font-bold">
                             {head}
                           </Typography>
                         </div>
@@ -228,57 +154,38 @@ export default function ProdutosPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {TABLE_ROWS.map(({ codigo, emp, descricao, descricaoReduzida, diretiva, bal, codigoBarras, codigoNCM, vasilh, cst, cstPis, pis, cstCofins, cofins, cest, cts, ativo, prVenda, prVenda1, prVenda2, prVenda3, prVenda4, prVenda5, oferta, prNormal, codTiaa }, index) => {
+                  {TABLE_ROWS.map((row, index) => {
                     const isLast = index === TABLE_ROWS.length - 1;
                     const classes = isLast ? "p-2 dark:bg-gray-800 dark:text-gray-200" : "p-2 border-b border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200";
 
                     return (
-                      <tr key={codigo}>
-                        <td className={classes}>
-                          <div className="flex items-center gap-2">
-                            <Checkbox />
-                            <Typography variant="small" className="font-bold dark:text-gray-200">
-                              {codigo}
-                            </Typography>
-                          </div>
-                        </td>
-                        <td className={classes}>{emp}</td>
-                        <td className={classes}>{descricao}</td>
-                        <td className={classes}>{descricaoReduzida}</td>
-                        <td className={classes}>{diretiva}</td>
-                        <td className={classes}>{bal}</td>
-                        <td className={classes}>{codigoBarras}</td>
-                        <td className={classes}>{codigoNCM}</td>
-                        <td className={classes}>{vasilh}</td>
-                        <td className={classes}>{cst}</td>
-                        <td className={classes}>{cstPis}</td>
-                        <td className={classes}>{pis}</td>
-                        <td className={classes}>{cstCofins}</td>
-                        <td className={classes}>{cofins}</td>
-                        <td className={classes}>{cest}</td>
-                        <td className={classes}>{cts}</td>
-                        <td className={classes}>{ativo}</td>
-                        <td className={classes}>{prVenda}</td>
-                        <td className={classes}>{prVenda1}</td>
-                        <td className={classes}>{prVenda2}</td>
-                        <td className={classes}>{prVenda3}</td>
-                        <td className={classes}>{prVenda4}</td>
-                        <td className={classes}>{prVenda5}</td>
-                        <td className={classes}>{oferta}</td>
-                        <td className={classes}>{prNormal}</td>
-                        <td className={classes}>{codTiaa}</td>
+                      <tr key={row.codigo}>
+                        {Object.values(row).map((value, i) => (
+                          <td key={i} className={classes}>{value}</td>
+                        ))}
                       </tr>
                     );
-                  }
-                  )}
+                  })}
                 </tbody>
-
               </table>
             </Card>
           </div>
         </div>
       </div>
-    </div>
 
+      {modalOpen && (
+        <Modal onClose={handleCloseModal}>
+          <div>
+            <h2 className="text-xl font-bold">Novo Produto</h2>
+            <form>
+              <div>
+                <label>Código...</label>
+                {/* Campos adicionais de formulário aqui */}
+              </div>
+            </form>
+          </div>
+        </Modal>
+      )}
+    </div>
   );
 }
