@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { Button, Input, Select, Option } from "@material-tailwind/react";
 
