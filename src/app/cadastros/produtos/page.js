@@ -1,8 +1,12 @@
 "use client";
 import Sidebar from "../../components/sidebar/page";
-import Modal from "../../components/modal/cadastro_produtos/page";
-import CadastroProdutoModal from '../../components/modal/cadastro_produtos/page';
+import Modal from "../../components/modal/cadastro_produtos/novo_cadastro/page";
+import CadastroProdutoModal from '../../components/modal/cadastro_produtos/novo_cadastro/page';
+import FiltroModal from '../../components/modal/cadastro_produtos/btn_filtrar/page';
+
 import { Button } from '@mui/material';
+import { Select, Option } from "@material-tailwind/react";
+
 
 import { useState } from "react";
 import { DocumentIcon, ArrowDownTrayIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
@@ -73,9 +77,9 @@ const TABLE_ROWS = [
   },
   {
     codigo: "002",
-    emp: "Emp1",
-    descricao: "Produto A",
-    descricaoReduzida: "Prod A",
+    emp: "Emp2",
+    descricao: "Produto b",
+    descricaoReduzida: "Prod b",
     diretiva: "D1",
     bal: "Sim",
     codigoBarras: "1234567890123",
@@ -101,10 +105,10 @@ const TABLE_ROWS = [
   },
   {
     codigo: "003",
-    emp: "Emp1",
-    descricao: "Produto A",
-    descricaoReduzida: "Prod A",
-    diretiva: "D1",
+    emp: "Emp3",
+    descricao: "Produto c",
+    descricaoReduzida: "Prod c",
+    diretiva: "D3",
     bal: "Sim",
     codigoBarras: "1234567890123",
     codigoNCM: "10010010",
@@ -129,10 +133,10 @@ const TABLE_ROWS = [
   },
   {
     codigo: "004",
-    emp: "Emp1",
-    descricao: "Produto A",
-    descricaoReduzida: "Prod A",
-    diretiva: "D1",
+    emp: "Emp4",
+    descricao: "Produto d",
+    descricaoReduzida: "Prod d",
+    diretiva: "D4",
     bal: "Sim",
     codigoBarras: "1234567890123",
     codigoNCM: "10010010",
@@ -157,11 +161,11 @@ const TABLE_ROWS = [
   },
   {
     codigo: "005",
-    emp: "Emp1",
-    descricao: "Produto A",
-    descricaoReduzida: "Prod A",
-    diretiva: "D1",
-    bal: "Sim",
+    emp: "Emp5",
+    descricao: "Produto f",
+    descricaoReduzida: "Prod F",
+    diretiva: "D5",
+    bal: "Não",
     codigoBarras: "1234567890123",
     codigoNCM: "10010010",
     vasilh: "Sim",
@@ -188,9 +192,35 @@ const TABLE_ROWS = [
 
 export default function ProdutosPage() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [filtersModalOpen, setFiltersModalOpen] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredRows, setFilteredRows] = useState(TABLE_ROWS);
+  const [filters, setFilters] = useState({ codigo: "", descricao: "", ativo: "" });
 
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
+  const toggleFiltersModal = () => setFiltersModalOpen(!filtersModalOpen);
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value.toLowerCase());
+    applyFilters(event.target.value.toLowerCase(), filters);
+  };
+
+  const applyFilters = (search = searchTerm, filterValues = filters) => {
+    const filtered = TABLE_ROWS.filter((row) => {
+      const matchesSearch = Object.values(row).some((cell) =>
+        cell.toString().toLowerCase().includes(search)
+      );
+      const matchesFilters =
+        (!filterValues.codigo || row.codigo.includes(filterValues.codigo)) &&
+        (!filterValues.descricao || row.descricao.toLowerCase().includes(filterValues.descricao.toLowerCase())) &&
+        (!filterValues.ativo || row.ativo === filterValues.ativo);
+
+      return matchesSearch && matchesFilters;
+    });
+    setFilteredRows(filtered);
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -212,23 +242,41 @@ export default function ProdutosPage() {
             <div className="flex flex-col md:flex-row justify-between items-center gap-2 p-2">
               <div className="w-full md:w-1/4">
                 <Input
-                  label="Search"
-                  icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+                  label="Buscar"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
                   className="w-full"
                 />
               </div>
 
               <div className="flex space-x-2 w-auto mt-2 md:mt-0">
-                <Button className="bg-primary-600 border border-gray-300 hover:bg-primary-700 text-gray text-sm rounded-lg focus:ring-2 focus:ring-primary-500 w-auto h-auto px-2 py-2 flex items-center justify-center" variant="contained" onClick={handleOpenModal}>Novo</Button>
+              
+              <button 
+                className="bg-white dark:bg-gray-100 border border-gray-300 hover:bg-primary-700 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-primary-500 px-2 py-2 flex items-center justify-center"
+                variant="contained"
+                onClick={handleOpenModal}>
+                <DocumentIcon className="w-5 h-5" /> 
+                <span className="hidden md:inline ml-2">Novo</span></button>
                 <CadastroProdutoModal open={modalOpen} onClose={handleCloseModal} />
-                <button
+                
+                {/* <button
                   className="bg-primary-600 border border-gray-300 hover:bg-primary-700 text-gray text-sm rounded-lg focus:ring-2 focus:ring-primary-500 px-2 py-2 flex items-center justify-center"
                 >
                   <ArrowDownTrayIcon className="w-5 h-5" />
                   <span className="hidden md:inline ml-2">Ordenar</span>
-                </button>
-                <button
+                </button> */}
+
+                {/* Novo botão de filtro */}
+                {/* <Button
+                  className="bg-primary-600 hover:bg-primary-700 text-white text-sm rounded-lg px-2 py-2"
+                  onClick={toggleFiltersModal}
+                >
+                  Filtrar
+                </Button> */}
+                  <button
                   id="filterDropdownButton"
+                  onClick={toggleFiltersModal}
+
                   className="bg-primary-600 border border-gray-300 hover:bg-primary-700 text-gray text-sm rounded-lg focus:ring-2 focus:ring-primary-500 w-auto h-auto px-2 py-2 flex items-center justify-center"
                 >
                   <svg
@@ -246,66 +294,50 @@ export default function ProdutosPage() {
                   {/* Esconder o texto em mobile */}
                   <span className="hidden md:inline ml-2">Filtrar</span>
                 </button>
+
+                {/* Modal de filtros */}
+                <FiltroModal
+                  open={filtersModalOpen}
+                  onClose={toggleFiltersModal}
+                  filters={filters}
+                  setFilters={setFilters}
+                  onApplyFilters={applyFilters}
+                />
               </div>
             </div>
 
+            {/* Tabela */}
             <Card className="h-full w-full overflow-auto">
               <table className="w-full min-w-max table-auto text-left">
                 <thead>
                   <tr>
-                    <th className="border-b border-gray-300 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 p-3 text-center">
-                      <input type="checkbox" />
+                  <th className="border-b border-gray-300 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 p-3 text-center">
+                  <input type="checkbox" />
                     </th>
-                    {TABLE_HEAD.map(({ head, icon }) => (
+                    {TABLE_HEAD.map(({ head }) => (
                       <th key={head} className="border-b border-gray-300 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 p-3">
-                        <div className="flex items-center gap-1">
-                          {/* {icon} */}
-                          <Typography color="blue-gray" variant="small" className="!font-bold">
-                            {head}
-                          </Typography>
-                        </div>
+                        {head}
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {TABLE_ROWS.map((row, index) => {
-                    const isLast = index === TABLE_ROWS.length - 1;
-                    const classes = isLast ? "p-2 dark:bg-gray-800 dark:text-gray-200" : "p-2 border-b border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200";
-
-                    return (
-                      <tr key={row.codigo}>
-                        {/* Checkbox para selecionar a linha */}
-                        <td className={`${classes} text-center`}>
-                          <input type="checkbox" />
-                        </td>
-                        {Object.values(row).map((value, i) => (
-                          <td key={i} className={`${classes} truncate`}>{value}</td>
-                        ))}
-                      </tr>
-                    );
-                  })}
+                  {filteredRows.map((row) => (
+                    <tr key={row.codigo}>
+                      <td className="p-2 dark:bg-gray-800 dark:text-gray-200">
+                        <input type="checkbox" />
+                      </td>
+                      {Object.values(row).map((value, i) => (
+                        <td key={i} className="p-2 dark:bg-gray-800 dark:text-gray-200 truncate">{value}</td>
+                      ))}
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </Card>
-
           </div>
         </div>
       </div>
-
-      {modalOpen && (
-        <Modal onClose={handleCloseModal}>
-          <div>
-            <h2 className="text-xl font-bold">Novo Produto</h2>
-            <form>
-              <div>
-                <label>Código...</label>
-                {/* Campos adicionais de formulário aqui */}
-              </div>
-            </form>
-          </div>
-        </Modal>
-      )}
     </div>
   );
 }
