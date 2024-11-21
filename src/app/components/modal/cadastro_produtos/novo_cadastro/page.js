@@ -57,10 +57,11 @@ export default function CadastroProdutoModal({ open, onClose}) {
       <DialogTitle className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 text-center font-bold">
         Novo Produto
       </DialogTitle>
-      <DialogContent className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200">
-  <Grid container spacing={2}>
-    <Grid item xs={12} sm={4}>
-      <TextField
+
+     <DialogContent className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200">
+        <Grid container spacing={2}>
+           <Grid item xs={12} sm={4}>
+            <TextField
         label="Código"
         name="codigo"
         value={formData.codigo}

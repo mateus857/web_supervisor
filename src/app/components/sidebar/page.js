@@ -162,15 +162,15 @@ function SidebarContent({ handleOpen, open, toggleTheme, theme }) {
                   Produtos
                 </ListItem>
               </Link>
-              {/* <Link href="/cadastros/entidades" passHref>
+               <Link href="/cadastros/pdvs" passHref>
                 <ListItem className={`${theme === "dark" ? "text-white hover:bg-gray-700" : "text-gray-800 hover:bg-gray-200"}`}>
                   <ListItemPrefix>
                     <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
                   </ListItemPrefix>
-                  Entidades
+                  PDVs
                 </ListItem>
               </Link>
-              <Link href="/cadastros/grupo_usuarios" passHref>
+             {/* <Link href="/cadastros/grupo_usuarios" passHref>
                 <ListItem className={`${theme === "dark" ? "text-white hover:bg-gray-700" : "text-gray-800 hover:bg-gray-200"}`}>
                   <ListItemPrefix>
                     <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />

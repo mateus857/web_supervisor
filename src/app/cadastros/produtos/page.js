@@ -2,10 +2,15 @@
 import Sidebar from "../../components/sidebar/page";
 import Modal from "../../components/modal/cadastro_produtos/novo_cadastro/page";
 import CadastroProdutoModal from '../../components/modal/cadastro_produtos/novo_cadastro/page';
+import EditarProdutoModal from '../../components/modal/cadastro_produtos/editar_produto/page';
+
 import FiltroModal from '../../components/modal/cadastro_produtos/btn_filtrar/page';
 
 import { Button } from '@mui/material';
 import { Select, Option } from "@material-tailwind/react";
+import { IconButton } from "@mui/material";
+import { Edit } from "@mui/icons-material";
+import { PencilIcon } from "@heroicons/react/24/outline";
 
 
 import { useState } from "react";
@@ -18,7 +23,9 @@ import {
 } from "@material-tailwind/react";
 
 const TABLE_HEAD = [
-  { head: "Código", icon: <Checkbox /> },
+  { head: "" }, // Coluna para o ícone de edição
+  { head: "" }, // Coluna para o checkbox
+  { head: "Código" },
   { head: "Emp" },
   { head: "Descrição" },
   { head: "Descrição Reduzida" },
@@ -193,7 +200,31 @@ const TABLE_ROWS = [
 export default function ProdutosPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [filtersModalOpen, setFiltersModalOpen] = useState(false);
+  // EDITAR
 
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedProduto, setSelectedProduto] = useState(null);
+
+  const handleOpenEditModal = (produto) => {
+    setSelectedProduto(produto);
+    setEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setEditModalOpen(false);
+    setSelectedProduto(null);
+  };
+
+  const handleSaveEdit = (updatedProduto) => {
+    // Atualize o produto na tabela
+    const updatedRows = filteredRows.map((row) =>
+      row.codigo === updatedProduto.codigo ? updatedProduto : row
+    );
+    setFilteredRows(updatedRows);
+  };
+
+
+  // FIM EDITAR
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredRows, setFilteredRows] = useState(TABLE_ROWS);
   const [filters, setFilters] = useState({ codigo: "", descricao: "", ativo: "" });
@@ -222,6 +253,7 @@ export default function ProdutosPage() {
     setFilteredRows(filtered);
   };
 
+  
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar />
@@ -248,17 +280,24 @@ export default function ProdutosPage() {
                   className="w-full"
                 />
               </div>
-
+{/* Inclua o modal fora do tbody */}
+<EditarProdutoModal
+    open={editModalOpen}
+    onClose={handleCloseEditModal}
+    produto={selectedProduto}
+    onSave={handleSaveEdit}
+  />
               <div className="flex space-x-2 w-auto mt-2 md:mt-0">
-              
-              <button 
-                className="bg-white dark:bg-gray-100 border border-gray-300 hover:bg-primary-700 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-primary-500 px-2 py-2 flex items-center justify-center"
-                variant="contained"
-                onClick={handleOpenModal}>
-                <DocumentIcon className="w-5 h-5" /> 
-                <span className="hidden md:inline ml-2">Novo</span></button>
+
+                <button
+                  className="bg-white dark:bg-gray-100 border border-gray-300 hover:bg-primary-700 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-primary-500 px-2 py-2 flex items-center justify-center"
+                  variant="contained"
+                  onClick={handleOpenModal}>
+                  <DocumentIcon className="w-5 h-5" />
+                  <span className="hidden md:inline ml-2">Novo</span>
+                  </button>
                 <CadastroProdutoModal open={modalOpen} onClose={handleCloseModal} />
-                
+
                 {/* <button
                   className="bg-primary-600 border border-gray-300 hover:bg-primary-700 text-gray text-sm rounded-lg focus:ring-2 focus:ring-primary-500 px-2 py-2 flex items-center justify-center"
                 >
@@ -273,7 +312,7 @@ export default function ProdutosPage() {
                 >
                   Filtrar
                 </Button> */}
-                  <button
+                <button
                   id="filterDropdownButton"
                   onClick={toggleFiltersModal}
 
@@ -310,29 +349,45 @@ export default function ProdutosPage() {
             <Card className="h-full w-full overflow-auto">
               <table className="w-full min-w-max table-auto text-left">
                 <thead>
-                  <tr>
-                  <th className="border-b border-gray-300 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 p-3 text-center">
-                  <input type="checkbox" />
-                    </th>
-                    {TABLE_HEAD.map(({ head }) => (
-                      <th key={head} className="border-b border-gray-300 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 p-3">
-                        {head}
+                  <tr className="bg-gray-100 dark:bg-gray-700">
+                    {TABLE_HEAD.map((col, i) => (
+                      <th
+                        key={i}
+                        className="p-2 text-left text-gray-700 dark:text-gray-200 font-medium"
+                      >
+                        {col.head}
                       </th>
                     ))}
                   </tr>
                 </thead>
+               
                 <tbody>
                   {filteredRows.map((row) => (
                     <tr key={row.codigo}>
                       <td className="p-2 dark:bg-gray-800 dark:text-gray-200">
                         <input type="checkbox" />
                       </td>
+                      <td className="p-2 dark:bg-gray-800 dark:text-gray-200">
+                   
+                        <IconButton
+                          onClick={() => handleOpenEditModal(row)}
+                          size="small"
+                        >
+                          <Edit className="text-primary-500" />
+                        </IconButton>
+                      </td>
                       {Object.values(row).map((value, i) => (
-                        <td key={i} className="p-2 dark:bg-gray-800 dark:text-gray-200 truncate">{value}</td>
+                        <td
+                          key={i}
+                          className="p-2 dark:bg-gray-800 dark:text-gray-200 truncate"
+                        >
+                          {value}
+                        </td>
                       ))}
                     </tr>
                   ))}
                 </tbody>
+
               </table>
             </Card>
           </div>
