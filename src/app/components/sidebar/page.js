@@ -44,6 +44,17 @@ import {
 
 
 export default function Sidebar() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768); // Considera "desktop" a partir de 768px
+    };
+    handleResize(); // Atualiza o estado ao carregar
+    window.addEventListener("resize", handleResize); // Monitora mudanças no tamanho da janela
+    return () => window.removeEventListener("resize", handleResize); // Remove o evento ao desmontar
+  }, []);
+
   // Tema atual, inicializado como "light"
   const [theme, setTheme] = useState("light");
 
@@ -100,11 +111,29 @@ toggleSidebar();
   return (
     <>
       {/* Header fixo no topo */}
-      {/* <Header toggleDrawer={toggleDrawer} /> */}
-      <Header toggleDrawer={toggleSidebar} />
+      {/* <Header toggleDrawer={handleDrawerToggle} /> */}
+      {/* <Header toggleDrawer={toggleSidebar} /> */}
+      <Header toggleDrawer={isDesktop ? toggleSidebar : handleDrawerToggle} />
 
       {/* Botão para alternar o tema (light/dark) */}
       <ThemeBtn toggleTheme={toggleTheme} theme={theme} />
+
+    {/* Botão de alternância de sidebar no desktop */}
+    <div className="hidden md:block fixed top-4 left-4 z-50">
+  <IconButton
+    variant="text"
+    size="lg"
+    onClick={toggleSidebar}
+    className="bg-white dark:bg-gray-800 shadow-lg rounded-full"
+  >
+    {isSidebarVisible ? (
+      <Bars3Icon className="h-8 w-8 text-black dark:text-white" />
+    ) : (
+      <Bars3Icon className="h-8 w-8 text-black dark:text-white" />
+    )}
+  </IconButton>
+</div>
+
 
       {/* Drawer para dispositivos móveis */}
       <Drawer
