@@ -9,8 +9,8 @@ export default function Header({ toggleDrawer, toggleSidebar }) {
       position="fixed"
       sx={{
         zIndex: (theme) => theme.zIndex.drawer + 1,
-        backgroundColor: "primary.main",
-        color: "white",
+        backgroundColor: "#374151", // Cinza neutro
+        color: "white", // Texto branco para contraste
       }}
     >
       <Toolbar>
