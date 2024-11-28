@@ -61,8 +61,8 @@ export default function PdvsPage() {
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Sidebar />
-      <div className="flex-1 overflow-hidden py-6 px-4 sm:px-6 lg:px-8 mx-auto w-full">
+      {/* <Sidebar /> */}
+      <div className="flex-1 overflow-hidden py-6 px-2 sm:px-4 lg:px-8 mx-auto w-full">
         <header className="px-4 mx-auto max-w-screen-2xl lg:px-12 mb-8">
           <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
             <main className="p-4">
@@ -133,6 +133,7 @@ export default function PdvsPage() {
             </Card>
           </div>
         </div>
+
       </div>
 
       {/* Modal de Novo PDV */}

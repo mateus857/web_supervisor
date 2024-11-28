@@ -3,6 +3,9 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/solid";
 import ThemeBtn from "../../components/theme_btn/page";
+import Header from "../header/page";
+import { useSidebar } from "../../components/SidebarContext";
+
 import {
   IconButton,
   Card,
@@ -41,85 +44,133 @@ import {
 
 
 export default function Sidebar() {
+  // Tema atual, inicializado como "light"
   const [theme, setTheme] = useState("light");
-  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
-  const [open, setOpen] = useState(0);
+
+  // Controle de visibilidade da sidebar fixa (apenas em desktops)
+  const { isSidebarVisible, toggleSidebar } = useSidebar(); // Usa o contexto para controle da visibilidade
+
+  // Controle do estado do Drawer (aberto ou fechado) - usado em dispositivos móveis
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+  // Estado do Accordion aberto (gerencia se um item da lista está expandido ou não)
+  const [open, setOpen] = useState(0);
+
+  // Recupera o tema salvo no localStorage ao carregar o componente
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "light";
-    setTheme(savedTheme);
-    document.documentElement.classList.toggle("dark", savedTheme === "dark");
+    const savedTheme = localStorage.getItem("theme") || "light"; // Recupera o tema salvo ou define como "light" por padrão
+    setTheme(savedTheme); // Atualiza o estado do tema
+    document.documentElement.classList.toggle("dark", savedTheme === "dark"); // Adiciona ou remove a classe "dark" do elemento raiz
   }, []);
 
+  // Alterna entre os temas "light" e "dark"
   const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    document.documentElement.classList.toggle("dark", newTheme === "dark");
-    localStorage.setItem("theme", newTheme);
+    const newTheme = theme === "light" ? "dark" : "light"; // Define o novo tema
+    setTheme(newTheme); // Atualiza o estado do tema
+    document.documentElement.classList.toggle("dark", newTheme === "dark"); // Atualiza a classe no elemento raiz
+    localStorage.setItem("theme", newTheme); // Salva o tema no localStorage
   };
 
+  // Alterna a visibilidade do Drawer
+  const toggleDrawer = () => {
+    // Em telas grandes, alterna a visibilidade da sidebar fixa
+    if (window.innerWidth >= 768) {
+toggleSidebar();
+    } else {
+      // Em telas pequenas, alterna o Drawer
+      setIsDrawerOpen((prev) => !prev);
+    }
+  };
+  const handleDrawerToggle = () => {
+    setIsDrawerOpen((prev) => !prev);
+  };
+
+
+  // Alterna qual Accordion está aberto (expande ou colapsa o item selecionado)
   const handleOpen = (value) => {
-    setOpen(open === value ? 0 : value);
+    setOpen(open === value ? 0 : value); // Define o item aberto ou fecha se já está aberto
   };
 
-  const toggleSidebar = () => {
-    setIsSidebarVisible((prev) => !prev);
-  };
-
+  // Abre o Drawer (para dispositivos móveis)
   const openDrawer = () => setIsDrawerOpen(true);
+
+  // Fecha o Drawer
   const closeDrawer = () => setIsDrawerOpen(false);
 
   return (
     <>
+      {/* Header fixo no topo */}
+      {/* <Header toggleDrawer={toggleDrawer} /> */}
+      <Header toggleDrawer={toggleSidebar} />
+
+      {/* Botão para alternar o tema (light/dark) */}
       <ThemeBtn toggleTheme={toggleTheme} theme={theme} />
 
-      {/* Botão de alternância de sidebar no desktop */}
-      <div className="fixed top-4 left-4 z-50 md:hidden">
-      <IconButton variant="text" size="lg" onClick={isDrawerOpen ? closeDrawer : openDrawer}>
-          {isDrawerOpen ? <XMarkIcon className="h-8 w-8 text-black dark:text-white" /> : <Bars3Icon className="h-8 w-8 text-black dark:text-white" />}
-        </IconButton>
-      </div>
-
-      {/* Botão de alternância de sidebar no desktop */}
-      <div className={`fixed top-4 ${isSidebarVisible ? "left-[18rem]" : "left-4"} z-50 hidden md:block`}>
-      <IconButton variant="text" size="lg" onClick={toggleSidebar}>
-          {isSidebarVisible ? <Bars3Icon className="h-8 w-8 text-black dark:text-white" /> : <Bars3Icon className="h-8 w-8 text-black dark:text-white" />}
-        </IconButton>
-      </div>
-
-      {/* Sidebar para dispositivos móveis */}
-      <Drawer open={isDrawerOpen} onClose={closeDrawer} className="md:hidden">
-        <div className={`h-full w-[17rem] p-4 shadow-xl ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}>
-          <SidebarContent handleOpen={handleOpen} open={open} toggleTheme={toggleTheme} theme={theme} />
+      {/* Drawer para dispositivos móveis */}
+      <Drawer
+        open={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        className="md:hidden"
+        ModalProps={{
+          disableBackdropClick: false, // Permite clicar no overlay para fechar
+          keepMounted: true,
+        }}
+      >
+        <div
+          className={`h-full w-[17rem] p-4 shadow-xl ${
+            theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"
+          }`}
+        >
+          <SidebarContent
+            toggleTheme={toggleTheme}
+            theme={theme}
+            handleOpen={handleOpen}
+            open={open}
+          />
         </div>
       </Drawer>
+      {/* Sidebar fixa para desktops */}
+{isSidebarVisible && (
+  <div
+    className={`hidden md:block fixed top-[72px] left-0 h-[calc(100vh-72px)] w-[17rem] p-4 shadow-xl ${
+      theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"
+    }`}
+  >
+    <SidebarContent 
+      theme={theme} 
+      handleOpen={handleOpen} 
+      open={open} 
+    />
+  </div>
+)}
 
-      {/* Sidebar para desktops, com visibilidade controlada */}
-      {isSidebarVisible && (
-        <div className={`hidden md:block w-[17rem] h-screen fixed top-0 left-0 shadow-xl p-4 ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}>
-          <SidebarContent handleOpen={handleOpen} open={open} toggleTheme={toggleTheme} theme={theme} />
-        </div>
-      )}
-
-      {/* Ajuste do conteúdo da página */}
-      <div className={`transition-all duration-300 ${isSidebarVisible ? "md:pl-[17rem]" : "md:pl-0"} pt-4`}>
-        {/* Conteúdo da página */}
+      <div
+        className={`pt-[72px] transition-all duration-300`}
+        style={{
+          // Ajuste dinâmico da largura do conteúdo
+          marginLeft: isSidebarVisible ? "17rem" : "0", // Ajuste da margem à esquerda
+          width: isSidebarVisible ? "calc(100% - 17rem)" : "100%", // Ajuste da largura
+        }}
+      >
+        {/* Conteúdo principal */}
       </div>
     </>
   );
 }
 
-function SidebarContent({ handleOpen, open, toggleTheme, theme }) {
+
+function SidebarContent({ toggleTheme, theme, handleOpen, open }) {
   return (
     <>
+      {/* Exemplo de cabeçalho opcional para a sidebar (com logo e nome do sistema) */}
+      {/* 
       <div className="flex items-center mb-2 p-2 justify-left space-x-3">
         <img src="/images/logo.jpg" alt="Logo" className="w-12 h-auto" />
         <Typography variant="h5" color={theme === "dark" ? "white" : "gray"}>
           Supervisor
         </Typography>
       </div>
-
+      */}
 
       <List>
         <Accordion
@@ -162,7 +213,15 @@ function SidebarContent({ handleOpen, open, toggleTheme, theme }) {
                   Produtos
                 </ListItem>
               </Link>
-               <Link href="/cadastros/pdvs" passHref>
+               <Link href="/cadastros/pdvs/perfil_pdv" passHref>
+                <ListItem className={`${theme === "dark" ? "text-white hover:bg-gray-700" : "text-gray-800 hover:bg-gray-200"}`}>
+                  <ListItemPrefix>
+                    <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                  </ListItemPrefix>
+                  Perfil PDV
+                </ListItem>
+              </Link>
+                <Link href="/cadastros/pdvs" passHref>
                 <ListItem className={`${theme === "dark" ? "text-white hover:bg-gray-700" : "text-gray-800 hover:bg-gray-200"}`}>
                   <ListItemPrefix>
                     <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />

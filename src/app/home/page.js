@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-1">
-        <Sidebar />
+        {/* <Sidebar /> */}
         
         <div className="flex-1 py-8 px-6 sm:px-10 lg:px-12 mx-auto max-w-7xl">
           <div className="px-6 mx-auto max-w-screen-2xl lg:px-12">
