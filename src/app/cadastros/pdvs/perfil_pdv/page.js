@@ -95,9 +95,9 @@ export default function ConfiguracaoPage() {
 
     return (
         <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-            <div className="flex-1 overflow-hidden py-6 px-4 sm:px-6 lg:px-8 mx-auto w-full">
-            <header className="px-4 shadow-md mb-8">
-          <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+            <div className="flex-1 overflow-hidden py-6 px-2 sm:px-3 lg:px-4 mx-auto w-full">
+            <header className="px-4 mx-auto max-w-screen-2xl lg:px-12 mb-8">
+            <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
             <main className="p-4">
               <h1 className="text-2xl font-bold">Perfil PDV</h1>
               <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -107,8 +107,9 @@ export default function ConfiguracaoPage() {
           </div>
         </header>
 
-                <div className="bg-white shadow-md dark:bg-gray-800 p-4 rounded-lg">
-                    <div className="flex justify-between items-center mb-4">
+        <div className="px-4 mx-auto max-w-screen-2xl lg:px-12">
+          <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-2 p-2">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Perfis Cadastrados</h2>
                         <Button variant="contained" startIcon={<AddCircle />} onClick={handleOpen}>
                             Novo
@@ -176,6 +177,7 @@ export default function ConfiguracaoPage() {
                     </DialogActions>
                 </Dialog>
             </div>
+        </div>
         </div>
 
     );

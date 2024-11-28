@@ -5,8 +5,7 @@ import { Input, Radio, Card, List, ListItem, ListItemPrefix, Typography, Button 
 export default function Config_geral() {
     return (
         <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-            <Sidebar />
-            <div className="flex-1 overflow-hidden py-6 px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl">
+            <div className="flex-1 overflow-hidden py-6 px-2 sm:px-3 lg:px-4 mx-auto max-w-7xl">
                 <header className="px-4 mx-auto max-w-screen-2xl lg:px-12 mb-8">
                     <div className="bg-white shadow-md dark:bg-gray-800 rounded-lg p-6">
                         <h1 className="text-3xl font-semibold text-gray-800 dark:text-gray-100">Configuração Geral</h1>
