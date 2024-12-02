@@ -3,13 +3,15 @@
 import { useState } from "react";
 import { Button, TextField, Grid, Dialog, DialogTitle, DialogContent, DialogActions, InputAdornment } from "@mui/material";
 import { Settings, AddCircle } from "@mui/icons-material";
-import Sidebar from "../../../components/sidebar/page";
-import Header from "../../../components/header/page";
+import NovoPerfilPdv from '../../../components/modal/perfil_pdv/cadastro_perfil/page';
+import { DocumentIcon } from "@heroicons/react/24/outline";
+
 
 
 const CONFIGS = [
     {
         id: 1,
+        codigo: "01",
         impressora: "Impressora A",
         descricao_impressora: "Descrição A",
         porta_impressora: "COM1",
@@ -17,6 +19,7 @@ const CONFIGS = [
     },
     {
         id: 2,
+        codigo: "02",
         impressora: "Impressora B",
         descricao_impressora: "Descrição B",
         porta_impressora: "COM2",
@@ -25,9 +28,14 @@ const CONFIGS = [
 ];
 
 export default function ConfiguracaoPage() {
+    const [modalOpen, setModalOpen] = useState(false);
+    const handleOpenModal = () => setModalOpen(true);
+    const handleCloseModal = () => setModalOpen(false);
+
     const [configs, setConfigs] = useState(CONFIGS);
     const [open, setOpen] = useState(false);
     const [formData, setFormData] = useState({
+        codigo: "",
         impressora: "",
         descricao_impressora: "",
         porta_impressora: "",
@@ -57,6 +65,7 @@ export default function ConfiguracaoPage() {
     const handleClose = () => {
         setOpen(false);
         setFormData({
+            codigo: "",
             impressora: "",
             descricao_impressora: "",
             porta_impressora: "",
@@ -111,13 +120,23 @@ export default function ConfiguracaoPage() {
           <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
             <div className="flex flex-col md:flex-row justify-between items-center gap-2 p-2">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Perfis Cadastrados</h2>
-                        <Button variant="contained" startIcon={<AddCircle />} onClick={handleOpen}>
-                            Novo
-                        </Button>
+                        
+                        <button
+                  className="bg-white dark:bg-gray-100 border border-gray-300 hover:bg-primary-700 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-primary-500 px-2 py-2 flex items-center justify-center"
+                  variant="contained"
+                  onClick={handleOpenModal}>
+                  <DocumentIcon className="w-5 h-5" />
+                  <span className="hidden md:inline ml-2">Novo</span>
+                  </button>
+                        <NovoPerfilPdv open={modalOpen} onClose={handleCloseModal} />
+
                     </div>
                     <ul className="space-y-4">
                         {configs.map((config) => (
                             <li key={config.id} className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                                  <p>
+                                    <strong>Código:</strong> {config.codigo}
+                                </p>
                                 <p>
                                     <strong>Impressora:</strong> {config.impressora}
                                 </p>
@@ -134,48 +153,6 @@ export default function ConfiguracaoPage() {
                         ))}
                     </ul>
                 </div>
-
-                <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-                    <DialogTitle>Nova Configuração</DialogTitle>
-                    <DialogContent>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <TextField
-                                    label="Impressora"
-                                    name="impressora"
-                                    value={formData.impressora}
-                                    onChange={handleChange}
-                                    fullWidth
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <Settings />
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    label="Descrição Impressora"
-                                    name="descricao_impressora"
-                                    value={formData.descricao_impressora}
-                                    onChange={handleChange}
-                                    fullWidth
-                                />
-                            </Grid>
-                            {/* Adicione os demais campos seguindo o mesmo padrão */}
-                        </Grid>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleClose} color="secondary">
-                            Cancelar
-                        </Button>
-                        <Button onClick={handleSubmit} variant="contained">
-                            Salvar
-                        </Button>
-                    </DialogActions>
-                </Dialog>
             </div>
         </div>
         </div>
