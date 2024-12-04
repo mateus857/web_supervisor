@@ -2,9 +2,9 @@
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/solid";
-import ThemeBtn from "../../components/theme_btn/page";
+import ThemeBtn from "../theme_btn/page";
 import Header from "../header/page";
-import { useSidebar } from "../../components/SidebarContext";
+import { useSidebar } from "../SidebarContext";
 
 import {
   IconButton,
