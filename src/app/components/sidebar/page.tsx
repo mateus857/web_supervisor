@@ -35,7 +35,6 @@ import {
   DocumentIcon,
   CogIcon,
   ExclamationCircleIcon,
-  LogoutIcon,
   ChevronRightIcon,
   ChevronDownIcon,
   Bars3Icon,
@@ -43,107 +42,76 @@ import {
 } from "@heroicons/react/24/outline";
 
 
+type SidebarContentProps = {
+  theme: string;
+  handleOpen: (value: number) => void;
+  open: number;
+};
+
 export default function Sidebar() {
-  const [isDesktop, setIsDesktop] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false); // Identifica se é desktop
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Controle do Drawer
+  const [theme, setTheme] = useState("light"); // Tema atual
+  const [open, setOpen] = useState(0); // Estado do Accordion aberto
 
+  const { isSidebarVisible, toggleSidebar } = useSidebar(); // Estado do contexto da sidebar
+
+  // Atualiza se é desktop ao carregar ou redimensionar a tela
   useEffect(() => {
-    const handleResize = () => {
-      setIsDesktop(window.innerWidth >= 768); // Considera "desktop" a partir de 768px
-    };
-    handleResize(); // Atualiza o estado ao carregar
-    window.addEventListener("resize", handleResize); // Monitora mudanças no tamanho da janela
-    return () => window.removeEventListener("resize", handleResize); // Remove o evento ao desmontar
+    const handleResize = () => setIsDesktop(window.innerWidth >= 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Tema atual, inicializado como "light"
-  const [theme, setTheme] = useState("light");
-
-  // Controle de visibilidade da sidebar fixa (apenas em desktops)
-  const { isSidebarVisible, toggleSidebar } = useSidebar(); // Usa o contexto para controle da visibilidade
-
-  // Controle do estado do Drawer (aberto ou fechado) - usado em dispositivos móveis
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  // Estado do Accordion aberto (gerencia se um item da lista está expandido ou não)
-  const [open, setOpen] = useState(0);
-
-  // Recupera o tema salvo no localStorage ao carregar o componente
+  // Recupera o tema salvo no localStorage
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "light"; // Recupera o tema salvo ou define como "light" por padrão
-    setTheme(savedTheme); // Atualiza o estado do tema
-    document.documentElement.classList.toggle("dark", savedTheme === "dark"); // Adiciona ou remove a classe "dark" do elemento raiz
+    const savedTheme = localStorage.getItem("theme") || "light";
+    setTheme(savedTheme);
+    document.documentElement.classList.toggle("dark", savedTheme === "dark");
   }, []);
 
-  // Alterna entre os temas "light" e "dark"
+  // Alterna o tema entre "light" e "dark"
   const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light"; // Define o novo tema
-    setTheme(newTheme); // Atualiza o estado do tema
-    document.documentElement.classList.toggle("dark", newTheme === "dark"); // Atualiza a classe no elemento raiz
-    localStorage.setItem("theme", newTheme); // Salva o tema no localStorage
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    document.documentElement.classList.toggle("dark", newTheme === "dark");
+    localStorage.setItem("theme", newTheme);
   };
 
-  // Alterna a visibilidade do Drawer
-  const toggleDrawer = () => {
-    // Em telas grandes, alterna a visibilidade da sidebar fixa
-    if (window.innerWidth >= 768) {
-toggleSidebar();
-    } else {
-      // Em telas pequenas, alterna o Drawer
-      setIsDrawerOpen((prev) => !prev);
-    }
-  };
-  const handleDrawerToggle = () => {
-    setIsDrawerOpen((prev) => !prev);
-  };
+  // Alterna a visibilidade do Drawer (em dispositivos móveis)
+  const handleDrawerToggle = () => setIsDrawerOpen((prev) => !prev);
 
-
-  // Alterna qual Accordion está aberto (expande ou colapsa o item selecionado)
-  const handleOpen = (value) => {
-    setOpen(open === value ? 0 : value); // Define o item aberto ou fecha se já está aberto
-  };
-
-  // Abre o Drawer (para dispositivos móveis)
-  const openDrawer = () => setIsDrawerOpen(true);
-
-  // Fecha o Drawer
-  const closeDrawer = () => setIsDrawerOpen(false);
+  // Alterna a visibilidade do Accordion
+  const handleOpen = (value: number) => setOpen(open === value ? 0 : value);
 
   return (
     <>
       {/* Header fixo no topo */}
-      {/* <Header toggleDrawer={handleDrawerToggle} /> */}
-      {/* <Header toggleDrawer={toggleSidebar} /> */}
-      <Header toggleDrawer={isDesktop ? toggleSidebar : handleDrawerToggle} />
+      <Header
+        toggleDrawer={isDesktop ? toggleSidebar : handleDrawerToggle}
+        toggleSidebar={toggleSidebar}
+      />
 
-      {/* Botão para alternar o tema (light/dark) */}
-      <ThemeBtn toggleTheme={toggleTheme} theme={theme} />
-
-    {/* Botão de alternância de sidebar no desktop */}
-    <div className="hidden md:block fixed top-4 left-4 z-50">
-  <IconButton
-    variant="text"
-    size="lg"
-    onClick={toggleSidebar}
-    className="bg-white dark:bg-gray-800 shadow-lg rounded-full"
-  >
-    {isSidebarVisible ? (
-      <Bars3Icon className="h-8 w-8 text-black dark:text-white" />
-    ) : (
-      <Bars3Icon className="h-8 w-8 text-black dark:text-white" />
-    )}
-  </IconButton>
-</div>
-
+      {/* Botão de alternância de sidebar no desktop */}
+      <div className="hidden md:block fixed top-4 left-4 z-50">
+        <IconButton
+          variant="text"
+          size="lg"
+          onClick={toggleSidebar}
+          className="bg-white dark:bg-gray-800 shadow-lg rounded-full"
+        >
+          <Bars3Icon
+            className={`h-8 w-8 ${isSidebarVisible ? "text-black" : "text-gray-400"}`}
+          />
+        </IconButton>
+      </div>
 
       {/* Drawer para dispositivos móveis */}
       <Drawer
         open={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
+        onClose={handleDrawerToggle}
         className="md:hidden"
-        ModalProps={{
-          disableBackdropClick: false, // Permite clicar no overlay para fechar
-          keepMounted: true,
-        }}
       >
         <div
           className={`h-full w-[17rem] p-4 shadow-xl ${
@@ -151,34 +119,34 @@ toggleSidebar();
           }`}
         >
           <SidebarContent
-            toggleTheme={toggleTheme}
             theme={theme}
             handleOpen={handleOpen}
             open={open}
           />
         </div>
       </Drawer>
-      {/* Sidebar fixa para desktops */}
-{isSidebarVisible && (
-  <div
-    className={`hidden md:block fixed top-[72px] left-0 h-[calc(100vh-72px)] w-[17rem] p-4 shadow-xl ${
-      theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"
-    }`}
-  >
-    <SidebarContent 
-      theme={theme} 
-      handleOpen={handleOpen} 
-      open={open} 
-    />
-  </div>
-)}
 
+      {/* Sidebar fixa para desktops */}
+      {isSidebarVisible && (
+        <div
+          className={`hidden md:block fixed top-[72px] left-0 h-[calc(100vh-72px)] w-[17rem] p-4 shadow-xl ${
+            theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"
+          }`}
+        >
+          <SidebarContent
+            theme={theme}
+            handleOpen={handleOpen}
+            open={open}
+          />
+        </div>
+      )}
+
+      {/* Espaço principal ajustado dinamicamente */}
       <div
-        className={`pt-[72px] transition-all duration-300`}
+        className="pt-[72px] transition-all duration-300"
         style={{
-          // Ajuste dinâmico da largura do conteúdo
-          marginLeft: isSidebarVisible ? "17rem" : "0", // Ajuste da margem à esquerda
-          width: isSidebarVisible ? "calc(100% - 17rem)" : "100%", // Ajuste da largura
+          marginLeft: isSidebarVisible ? "17rem" : "0",
+          width: isSidebarVisible ? "calc(100% - 17rem)" : "100%",
         }}
       >
         {/* Conteúdo principal */}
@@ -186,6 +154,7 @@ toggleSidebar();
     </>
   );
 }
+
 
 
 function SidebarContent({ toggleTheme, theme, handleOpen, open }) {

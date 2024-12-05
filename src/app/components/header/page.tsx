@@ -3,7 +3,13 @@
 import { AppBar, Toolbar, Typography, IconButton, Box } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
-export default function Header({ toggleDrawer, toggleSidebar }) {
+// Tipagem para as propriedades do Header
+interface HeaderProps {
+  toggleDrawer?: () => void; // Função opcional para alternar o Drawer (modo mobile)
+  toggleSidebar: () => void; // Função obrigatória para alternar a sidebar (modo desktop)
+}
+
+const Header: React.FC<HeaderProps> = ({ toggleDrawer, toggleSidebar }) => {
   return (
     <AppBar
       position="fixed"
@@ -14,7 +20,9 @@ export default function Header({ toggleDrawer, toggleSidebar }) {
       }}
     >
       <Toolbar>
-        {/* Botão para alternar o Drawer */}
+  
+
+        {/* Botão para alternar a sidebar no modo desktop */}
         <IconButton
           edge="start"
           color="inherit"
@@ -24,17 +32,6 @@ export default function Header({ toggleDrawer, toggleSidebar }) {
         >
           <MenuIcon />
         </IconButton>
-
-        {/* Botão para alternar a sidebar no desktop */}
-        {/* <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="toggle-sidebar"
-          onClick={toggleSidebar}
-          sx={{ marginRight: 2 }}
-        >
-          <MenuIcon /> 
-        </IconButton> */}
 
         {/* Logo e nome */}
         <Box
@@ -49,4 +46,6 @@ export default function Header({ toggleDrawer, toggleSidebar }) {
       </Toolbar>
     </AppBar>
   );
-}
+};
+
+export default Header;

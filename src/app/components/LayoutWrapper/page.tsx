@@ -16,8 +16,7 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
   const excludedRoutes = ["/login", "/"]; // Adicione outras rotas, se necessário
   const isExcludedRoute = excludedRoutes.includes(pathname);
 
-  const { isSidebarVisible } = useSidebar(); // Estado da sidebar para ajustar o layout
-
+    const { isSidebarVisible, toggleSidebar } = useSidebar();
   return (
     <>
       {/* Verifica se a rota está excluída */}
@@ -28,7 +27,9 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
         // Caso contrário, renderiza o layout completo
         <div className="flex flex-col h-screen">
           {/* Header fixo no topo */}
-          <Header />
+          {/* <Header /> */}
+          <Header toggleSidebar={toggleSidebar} />
+
           <div className="flex-1">
             {/* Sidebar visível apenas para rotas não excluídas */}
             {isSidebarVisible && (
